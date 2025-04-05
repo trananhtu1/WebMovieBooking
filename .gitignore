@@ -1,0 +1,12 @@
+# .gitignore
+
+# Các file cấu hình nhạy cảm
+back_end/.env
+back_end/firebase-service-account.json
+back_end/node_modules/.package-lock.json
+
+# Các file JavaScript nhạy cảm
+front_end/src/server/api/MovieDB.jsx
+front_end/src/server/config/FireBase.jsx
+front_end/src/server/constants/index.jsx
+
