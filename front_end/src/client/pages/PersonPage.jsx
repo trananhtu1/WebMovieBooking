@@ -8,6 +8,8 @@ import {
 import Loading from '../components/Loading';
 import MovieList from '../components/MovieList';
 import Header from '../components/Header';
+import { Button } from 'antd';
+import {  ArrowLeftOutlined } from "@ant-design/icons"
 
 const PersonPage = () => {
   const { id } = useParams();
@@ -47,7 +49,7 @@ const PersonPage = () => {
   return (
     <div className="bg-white min-h-screen pb-10">
       <Header/>
-
+      <Button type="link" className="mt-16 mb-4 text-gray-800 dark:text-yellow-400" onClick={() => window.history.back()}>Quay Lại</Button>
       {/* Main Content */}
       <div className="mt-12 max-w-7xl mx-auto px-4 py-8">
         {loading ? (
@@ -81,7 +83,7 @@ const PersonPage = () => {
             {/* Person Details */}
             <div className="md:col-span-2 space-y-6">
               <div className="text-center md:text-left">
-                <h1 className="text-3xl font-bold text-blue-600 mb-2">
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-yellow-400 mb-2">
                   {person.name}
                 </h1>
                 <p className="text-gray-600">
@@ -90,7 +92,7 @@ const PersonPage = () => {
               </div>
 
               {/* Detailed Info Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-gray-100 p-6 rounded-lg">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4  text-gray-900 dark:text-yellow-400 bg-gray-100 p-6 rounded-lg">
                 <DetailItem 
                   label="Giới Tính" 
                   value={formatGender(person.gender)} 
@@ -135,9 +137,9 @@ const PersonPage = () => {
 
 // Helper component for detail items
 const DetailItem = ({ label, value }) => (
-  <div className="text-center">
-    <p className="font-semibold text-gray-700">{label}</p>
-    <p className="text-blue-600">{value}</p>
+  <div className="text-center ">
+    <p className="font-semibold  text-gray-900 dark:text-yellow-400">{label}</p>
+    <p className=" text-gray-900">{value}</p>
   </div>
 );
 

@@ -8,6 +8,7 @@ const admin = require('firebase-admin');
 // Khởi tạo Firebase (thêm cấu hình của bạn tại đây)
 
 const serviceAccount = require('D:/WebMovie/back_end/firebase-service-account.json');
+
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
@@ -19,7 +20,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-app.use(express.static('./public'));
+
 
 //ngrok http 5000
 // MoMo API Config
@@ -27,7 +28,7 @@ const accessKey = process.env.MOMO_ACCESS_KEY;
 const secretKey = process.env.MOMO_SECRET_KEY;
 const partnerCode = process.env.MOMO_PARTNER_CODE;
 const redirectUrl = process.env.MOMO_RETURN_URL;
-const ipnUrl = 'https://a377-2405-4803-fbae-1960-7cb7-4807-5c1a-53f.ngrok-free.app/callback';
+const ipnUrl = 'https://64a7-2405-4803-fe22-e8d0-f872-610b-1cd2-7cc1.ngrok-free.app/callback';
 const requestType = "captureWallet";
 const orderInfo = 'Pay with MoMo';
 const autoCapture = true;
@@ -166,19 +167,23 @@ app.post('/callback', async (req, res) => {
             // Save to the "ticketData" collection that you have in your Firestore
             try {
                 const paymentRef = db.collection('ticketData').doc(orderId);
-                await paymentRef.set({
+                const ticketInfo = ticketData.ticketInfo;
+                const dataToSave = {
                     userId: ticketData.userId,
                     amount: parseInt(amount),
                     orderId: orderId,
                     transId: transId,
-                    movieId: ticketData.ticketInfo.movieId,
-                    movieTitle: ticketData.ticketInfo.movieTitle,
-                    date: ticketData.ticketInfo.date,
-                    time: ticketData.ticketInfo.time,
-                    seatNumbers: ticketData.ticketInfo.seatNumbers,
+                    movieId: ticketInfo.movieId,
+                    movieTitle: ticketInfo.movieTitle,
+                    roomId: ticketInfo.roomId || "defaultRoomId", // Đảm bảo không có giá trị undefined
+                    showtimeId: ticketInfo.showtimeId,
+                    date: ticketInfo.date,
+                    time: ticketInfo.time,
+                    seatNumbers: ticketInfo.seatNumbers,
                     status: 'success',
                     paymentDate: admin.firestore.FieldValue.serverTimestamp()
-                });
+                  };
+                  await paymentRef.set(dataToSave);
                 
                 console.log(`Payment data saved to Firebase for order: ${orderId}`);
             } catch (fbError) {
@@ -242,9 +247,10 @@ app.use((req, res, next) => {
     console.log(`Incoming request: ${req.method} ${req.url}`, req.body);
     next();
 });
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
-
+app.use(express.static('./public'));
 module.exports = { createMomoPayment };

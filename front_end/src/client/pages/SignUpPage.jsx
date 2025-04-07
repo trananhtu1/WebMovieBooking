@@ -6,25 +6,39 @@ import appleIcon from '../../assets/icons/apple.png';
 import facebookIcon from '../../assets/icons/facebook.png';
 import { IoArrowBackCircleSharp } from 'react-icons/io5';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../server/config/FireBase';
+import { auth, db } from '../../server/config/FireBase';
+import { doc, setDoc } from 'firebase/firestore';
 
 export default function SignUpPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
+  const [fullName, setFullName] = useState('');
 
   const handleSubmit = async () => {
-    if (email && password) {
+    if (email && password && fullName) {
       try {
-        // Xử lý logic đăng ký (tạm thời log ra console)
-        
-        await createUserWithEmailAndPassword(auth,email,password);
-        console.log('Đăng ký thành công:', { auth, email, password });
+        // Tạo người dùng với email và mật khẩu
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Lưu thông tin bổ sung vào collection 'userProfiles' với ID là UID của người dùng
+        const userDocRef = doc(db, 'userProfiles', user.uid);
+        await setDoc(userDocRef, {
+          name: fullName,
+          email: email,
+          // Bạn có thể thêm các thông tin khác tại đây nếu cần
+        });
+
+        console.log('Đăng ký thành công:', { user });
         navigate('/welcome');
       } catch (err) {
         console.error('Có lỗi:', err.message);
+        // Xử lý lỗi đăng ký (ví dụ: hiển thị thông báo cho người dùng)
       }
+    } else {
+      console.warn('Vui lòng nhập đầy đủ họ và tên, email và mật khẩu.');
+      // Hiển thị cảnh báo cho người dùng nếu thiếu thông tin
     }
   };
 
@@ -32,13 +46,13 @@ export default function SignUpPage() {
     <div className="min-h-screen flex flex-col bg-neutral-600">
       {/* Nút quay lại */}
       <div className="flex justify-start p-4">
-              <IoArrowBackCircleSharp 
-                  size="50" color="black"
-                onClick={() => navigate(-1)}
-                className="p-2 bg-yellow-400 rounded-tr-2xl rounded-bl-2xl shadow-lg hover:bg-yellow-500 transition"
-              >   
-              </IoArrowBackCircleSharp>
-            </div>
+        <IoArrowBackCircleSharp
+          size="50" color="black"
+          onClick={() => navigate(-1)}
+          className="p-2 bg-yellow-400 rounded-tr-2xl rounded-bl-2xl shadow-lg hover:bg-yellow-500 transition"
+        >
+        </IoArrowBackCircleSharp>
+      </div>
 
       {/* Ảnh logo */}
       <div className="flex justify-center mb-6">
@@ -61,6 +75,8 @@ export default function SignUpPage() {
               type="text"
               className="w-full p-4 bg-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400"
               placeholder="Nhập họ và tên"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
             />
           </div>
 

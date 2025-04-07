@@ -38,6 +38,7 @@ function AppRoutes() {
           <Route path="*" element={<Navigate to="/home" />} />
           <Route path="/buy/:id" element={<BuyTicketPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          
         </>
       ) : (
         <>

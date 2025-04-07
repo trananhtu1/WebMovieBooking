@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Avatar } from "antd";
 import { Button, Dropdown, Menu } from "antd";
 import { UseAuth } from '../../client/hook/UseAuth';
+import defaultAvt from '../../assets/images/fullStar.png';
+
 
 export function Profile() {
   const navigate = useNavigate();
@@ -21,12 +23,7 @@ export function Profile() {
       <Menu.Item key="profile" onClick={() => navigate("/profile")}>
         <User className="mr-2 h-6 w-6" /> Profile
       </Menu.Item>
-      <Menu.Item key="tickets" onClick={() => navigate("/profile/tickets")}>
-        <CreditCard className="mr-2 h-6 w-6" /> My Tickets
-      </Menu.Item>
-      <Menu.Item key="settings" onClick={() => navigate("/profile/settings")}>
-        <Settings className="mr-2 h-6 w-6" /> Settings
-      </Menu.Item>
+     
       <Menu.Divider />
       <Menu.Item key="logout" onClick={handleLogout}>
         <LogOut className="mr-2 h-6 w-6" /> Log out
@@ -37,7 +34,7 @@ export function Profile() {
   return (
     <Dropdown overlay={menu} trigger={["click"]} placement="bottomRight">
       <Button shape="circle" className="relative h-8 w-8 rounded-full">
-        <Avatar src="/placeholder.svg?height=32&width=32" alt="@user" size={32} />
+        <Avatar src={defaultAvt} alt="@user" size={32} />
       </Button>
     </Dropdown>
   );

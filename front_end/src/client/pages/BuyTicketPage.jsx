@@ -39,33 +39,42 @@ export function BuyTicketPage() {
   }, [id]);
 
   // Hàm gọi API backend để khởi tạo thanh toán qua MoMo
-  const handleSelectSeats = async (selectedDate, selectedTime, selectedSeats, totalPrice) => {
+  const handleSelectSeats = async (selectedRoom, selectedDate, selectedTime, selectedSeats, totalPrice) => {
     if (!user) {
       alert("Bạn cần đăng nhập để đặt vé.");
       return;
     }
+
     try {
       setPaymentLoading(true);
-      const userId = user.uid; // Sử dụng user.uid từ Firebase Auth
+      const userId = user.uid;
+
+      // Tạo showtimeId để liên kết
+      const showtimeId = `${movieData.id}-${selectedRoom}-${selectedDate}-${selectedTime}`;
+
       const ticketInfo = {
         movieId: movieData.id,
         movieTitle: movieData.title,
+        showtimeId, // Liên kết với showtime
         date: selectedDate,
         time: selectedTime,
         seatNumbers: selectedSeats,
+        roomId: selectedRoom, // Chắc chắn gửi đúng roomId
       };
 
+      // Gửi yêu cầu thanh toán qua API backend
       const response = await fetch('http://localhost:5000/payment', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: totalPrice, userId, ticketInfo })
+        body: JSON.stringify({ amount: totalPrice, userId, ticketInfo }) // Gửi đủ
       });
 
       const data = await response.json();
+      console.log('Response from backend:', data);  // Log phản hồi từ server
+
       if (data.payUrl) {
-        window.location.href = data.payUrl; // Redirect tới trang thanh toán MoMo
+        window.location.href = data.payUrl; // Điều hướng người dùng đến trang thanh toán
       } else {
-        console.error('Payment initiation failed');
         alert('Thanh toán không thành công. Vui lòng thử lại.');
       }
     } catch (error) {
@@ -74,24 +83,24 @@ export function BuyTicketPage() {
     } finally {
       setPaymentLoading(false);
     }
-  };
+};
+
 
   if (loading) return <Loading />;
   if (!movieData) return <div>Movie not found</div>;
   if (paymentLoading) return <Loading text="Đang xử lý đặt vé..." />;
 
   return (
-    <div className="min-h-screen bg-white py-8">
-      <Header/>
+    <div className="min-h-screen bg-lightBg text-lightText dark:bg-darkBg dark:text-darkText transition-colors duration-300">
+      <Header />
       {/* Breadcrumb */}
-      <div className="mt-12 max-w-4xl mx-auto px-4 mb-6">
-        <div className="text-sm">
-          <span className="text-gray-600">Trang chủ &gt; </span>
-          <span className="text-gray-600">{movieData.title} &gt; </span>
-          <span className="text-blue-600">Đặt vé</span>
+      <div className="mt-16 max-w-4xl mx-auto px-4 mb-6">
+        <div className="text-md">
+          <span className=" text-gray-900 dark:text-yellow-400">Trang chủ &gt; </span>
+          <span className="  text-yellow-400">{movieData.title} &gt; </span>
+          <span className=" text-gray-900 dark:text-yellow-400">Đặt vé</span>
         </div>
       </div>
-
       {/* Login Notice */}
       {!user && (
         <div className="max-w-4xl mx-auto px-4 mb-6">
@@ -100,7 +109,7 @@ export function BuyTicketPage() {
               <div className="ml-3">
                 <p className="text-sm text-yellow-700">
                   Bạn cần đăng nhập để đặt vé xem phim.{' '}
-                  <button 
+                  <button
                     onClick={() => navigate('/login', { state: { redirectTo: `/buy-ticket/${id}` } })}
                     className="font-medium text-yellow-700 underline"
                   >
@@ -114,8 +123,8 @@ export function BuyTicketPage() {
       )}
 
       {/* Truyền handleSelectSeats cho component OptionsTicket */}
-      <OptionsTicket 
-        movieData={movieData} 
+      <OptionsTicket
+        movieData={movieData}
         onSelectSeats={handleSelectSeats}
       />
     </div>

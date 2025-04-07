@@ -6,7 +6,7 @@ export default function Cast({ cast}) {
 
   return (
     <div className="my-6 mb-6">
-      <h2 className="text-blue-600 text-lg mx-4 mb-5">Diễn Viên</h2>
+      <h2 className=" text-gray-900 dark:text-yellow-400 text-lg mx-4 mb-5">Diễn Viên</h2>
       <div className="flex overflow-x-auto px-4">
         {cast &&
           cast.map((person, index) => (

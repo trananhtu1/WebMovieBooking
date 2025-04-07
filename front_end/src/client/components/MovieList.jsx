@@ -9,7 +9,7 @@ export default function MovieList({ title, hideSeeAll, data }) {
     <div className="mb-8 space-y-4">
       {/* Tiêu đề và nút See All */}
       <div className="flex justify-between items-center mx-4">
-        <h2 className="text-blue-600 text-lg">{title}</h2>
+        <h2 className=" text-gray-900 dark:text-yellow-400 text-lg">{title}</h2>
         {!hideSeeAll && (
           <button
             onClick={() => navigate('/movies')}

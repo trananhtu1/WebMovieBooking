@@ -13,6 +13,7 @@ import {
 } from '../../server/api/MovieDB';
 import Loading from '../components/Loading';
 import Header from '../components/Header';
+import { Button } from 'antd';
 
 export default function MovieScreen() {
   const { id } = useParams();
@@ -61,13 +62,14 @@ export default function MovieScreen() {
     navigate(`/buy/${id}`);
   };
   return (
-    <div className="bg-white min-h-screen pb-10">
+    <div className=" bg-white dark:bg-gray-900 min-h-screen pb-10">
       <Header/>
       {/* Breadcrumb */}
       <div className="mt-12 max-w-7xl mx-auto px-4 py-4">
         <div className="text-sm">
-          <span className="text-gray-600">Trang chủ &gt; </span>
-          <span className="text-blue-600">{movie?.title}</span>
+          <Button type="link" className="mt-12 mb-4 text-gray-800 dark:text-yellow-400" onClick={() => window.history.back()}>Quay Lại &gt;</Button>
+          <span className=" text-gray-900 dark:text-yellow-400">Trang chủ &gt; </span>
+          <span className=" text-gray-900 dark:text-yellow-400">{movie?.title}</span>
         </div>
       </div>
 
@@ -92,17 +94,17 @@ export default function MovieScreen() {
 
             {/* Movie Details */}
             <div className="w-full md:w-2/3 lg:w-3/4">
-              <h1 className="text-3xl font-bold mb-6">{movie?.title}</h1>
+              <h1 className="text-3xl text-gray-900 dark:text-yellow-400 font-bold mb-6">{movie?.title}</h1>
               
-              <p className="text-gray-700 mb-8 leading-relaxed">
+              <p className="text-gray-900 dark:text-yellow-400 mb-8 leading-relaxed">
                 {movie?.overview}
               </p>
 
-              <div className="space-y-4">
+              <div className="space-y-4 text-gray-900 dark:text-yellow-400">
                 <DetailRow label="ĐẠO DIỄN:" value={movie?.director || 'N/A'} />
                 <DetailRow 
                   label="DIỄN VIÊN:" 
-                  value={cast.slice(0, 3).map(actor => actor.name).join(', ')} 
+                  value={cast.slice(0, 3).map(actor => actor.name).join(', ') }  
                 />
                 <DetailRow 
                   label="THỂ LOẠI:" 
@@ -120,7 +122,7 @@ export default function MovieScreen() {
               </div>
 
               {/* Book Ticket Button */}
-              <button className="mt-8 w-full py-3 bg-red-600 text-white text-lg font-semibold rounded-lg hover:bg-red-700 transition-colors duration-300"
+              <button className="mt-8 w-full py-3 bg-yellow-400 text-white text-lg font-semibold rounded-lg hover:bg-yellow-700 transition-colors duration-300"
               onClick={handleBuyClick}>
                 Đặt Vé
               </button>
@@ -143,6 +145,6 @@ export default function MovieScreen() {
 const DetailRow = ({ label, value }) => (
   <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
     <span className="font-bold min-w-[140px]">{label}</span>
-    <span className="text-gray-700">{value}</span>
+    <span className=" text-gray-900 dark:text-yellow-400">{value}</span>
   </div>
 );
