@@ -1,8 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import welcomeImage from '../../assets/images/welcome.png';
-import welcomePic from '../../assets/images/welcomePic.png';
-
+import welcomePic from '../../assets/images/banner-wellcome.jpg';
 export default function WelcomePage() {
   const navigate = useNavigate();
 
